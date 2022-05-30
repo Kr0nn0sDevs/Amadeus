@@ -1,6 +1,7 @@
+from numpy import take
 import pyttsx3 #pip install pyttsx3
 import datetime
-import speech_recognition as sr #pip install SpeechRecogmition
+import speech_recognition as sr #pip install SpeechRecognition
 import wikipedia #pip install wikipedia
 import smtplib
 import webbrowser as wb
@@ -8,14 +9,21 @@ import os
 import pyautogui #pip install pyautogui
 import psutil #pip install psutil
 import pyjokes #pip install pyjokes
-import pywhatkit as kit
-
+import pywhatkit as kit #pip install pywhatkit
+from time import sleep
+#install: pip install pipwin, pipwin install pyaudio
+#Instalar el archivo de python que esta en la carpeta del proyecto (PyAudio)
 #Revisar luego lo de spotify
 # import openspotify
 
+from spotipy.oauth2 import SpotifyClientCredentials
+import spotipy
+import sys
+import pprint
+
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[56].id)
+engine.setProperty('voice', voices[0].id)
 
 #engine.say("Welcome Christian")
 engine.runAndWait()
@@ -30,13 +38,13 @@ def time():
     speak(Time)
     hour = datetime.datetime.now().hour
     if hour >= 6 and hour<12:
-        speak("Good Morning Christian")
+        speak("Good Morning Sir!")
     elif hour >= 12 and hour < 18:
-        speak("Good Afternoon Christian")
+        speak("Good Afternoon Sir!")
     elif hour >= 18 and hour < 24:
-        speak("Good Evening Christian")
+        speak("Good Evening Sir!")
     else:
-        speak("Good Night Christian")
+        speak("Good Night Sir!")
 
 def date():
     year = int(datetime.datetime.now().year)
@@ -59,7 +67,7 @@ def wishme():
     elif hour >= 18 and hour < 24:
         speak("Good Evening Sir!!")
     else:
-        speak("Good Night Christian")
+        speak("Good Night Sir!!")
     speak("Jarvis at your service. Plaese tell me how can i help you?")
     
 #wishme()
@@ -106,12 +114,53 @@ def jokes():
 
 def message():
     contact = takeComand().lower()
-    list = [
-        mom == +529671269131,
-        dad == +529671226202
-    ]
-    if contact in list:
-        return contact
+    
+
+def song():
+    speak("What's name of song?")
+    song = takeComand()
+    kit.playonyt(song)
+
+def spotify():
+    speak("What's name of song?")
+    song = takeComand()
+    #speak("The author?")
+    #author = takeComand()
+    client_id = 'cfb218957763498c844689eeeab8fe9e'
+    secret_id = '0ee26d50dade4d69bb99661a1f53b198'
+    flag = 0
+
+    # artist and name of the song
+    author = author
+    track = song.upper()
+
+    if len(author) > 0:
+        # authenticate
+        sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(client_id, secret_id))
+        result = sp.search(author)
+
+        for i in range(0, len(result["tracks"]["items"])):
+            # songs by artist
+            name_song = result["tracks"]["items"][i]["name"].upper()
+
+            if song in name_song:
+                flag = 1
+                wb.open(result["tracks"]["items"][i]["uri"])
+                sleep(5)
+                pyautogui.press("enter")
+                break
+
+    # if song by artist not found
+    if flag == 0:
+        song = song.replace(" ", "%20")
+        wb.open(f'spotify:search:{song}')
+        sleep(5)
+        for i in range(18):
+            pyautogui.press("tab")
+
+        for i in range(2):
+            pyautogui.press("enter")
+            sleep(1)
 
 if __name__ == "__main__":
     wishme()
@@ -121,8 +170,14 @@ if __name__ == "__main__":
         if 'time' in query:
             time()
         
+        elif 'your name' in query:
+            speak("My name is Jarvis sir!")#Nombre provicional
+        
         elif 'date' in query:
             date()
+            
+        elif 'thanks' in query:
+            speak("Sure sir!")
         
         elif 'wikipedia' in query:
             speak("searching....")
@@ -157,13 +212,14 @@ if __name__ == "__main__":
             
         elif 'facebook' in query:
             wb.open("www.facebook.com")
+            
+        #elif 'crunchyroll' in query:
+        #    wb.open
         
         elif 'search in firefox' in query:
             speak("What should i search? ")
-            #firefoxpath = '/lib/firefox-esr/firefox-bin %s'
             search = takeComand().lower()
-            wb.open(f"{search}")
-        
+            wb.open(search + '.com')
         
         elif 'logout' in query:
             os.system("shutdown -l")
@@ -174,8 +230,8 @@ if __name__ == "__main__":
         elif 'restart' in query:
             os.system("shutdown /r /t 1")
         
-        #elif 'play spotify' in query:
-        #    spotify()
+        elif 'spotify' in query:
+            spotify()
         
         elif 'remember that' in query:
             speak("What should I remember?")
@@ -185,7 +241,7 @@ if __name__ == "__main__":
             remember.write(data)
             remember.close()
         
-        elif 'do you know anything' in query:
+        elif 'do you know anyting' in query:
             remember = open('data.txt','r')
             speak("you said me to remember that" + remember.read())
             
@@ -238,6 +294,9 @@ if __name__ == "__main__":
         
         elif 'send message' in query:
             message()
+            
+        elif 'song' in query:
+            song()
         
         #Aprender electronica y circuitos para crear sistema de automatizacion con jarvis
         
