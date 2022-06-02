@@ -25,7 +25,6 @@ engine = pyttsx3.init()
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[0].id)
 
-#engine.say("Welcome Christian")
 engine.runAndWait()
 
 def speak(audio):
@@ -68,9 +67,7 @@ def wishme():
         speak("Good Evening Sir!!")
     else:
         speak("Good Night Sir!!")
-    speak("Jarvis at your service. Plaese tell me how can i help you?")
-    
-#wishme()
+    speak("Jarvis at your service plaese tell me how can i help you?")
 
 def takeComand():
     r = sr.Recognizer()
@@ -113,55 +110,104 @@ def jokes():
     speak(pyjokes.get_joke())
 
 def message():
+    speak("Tell me the phone of contact")
     contact = takeComand().lower()
     
-
+    wb.open('https://web.whatsapp.com/send?phone=+529671269131'    """Poner un +contact despues de las comillas luego""")
+    
+    sleep(10)
+    
+    speak("Which is your message?")
+    mesage = takeComand().lower()
+    for i in range(12):
+        pyautogui.press('tab')
+    
+    pyautogui.typewrite("My name is Amadeus, i am virtual assistant for Christain, he is send this message")
+    pyautogui.press('enter')
+    pyautogui.typewrite(mesage)
+    pyautogui.press('enter')
+    
 def song():
     speak("What's name of song?")
-    song = takeComand()
+    song = takeComand().lower()
     kit.playonyt(song)
 
 def spotify():
-    speak("What's name of song?")
-    song = takeComand()
+    speak("What's tour command?")
+    song = takeComand().lower()
     #speak("The author?")
     #author = takeComand()
     client_id = 'cfb218957763498c844689eeeab8fe9e'
     secret_id = '0ee26d50dade4d69bb99661a1f53b198'
     flag = 0
+    if flag == 0:
+        song = song.replace(" ", "%20")
+        wb.open(f'spotify:search:{song}')
+        sleep(5)
+        flag = 1
+        for i in range(28):
+            pyautogui.press("tab")
 
-    # artist and name of the song
-    author = author
-    track = song.upper()
+        for i in range(1):
+            pyautogui.press("enter")
+            sleep(1)
+    #Revisar esto luego, es para nueva busqueda de cancion, necesito cambios
+    """if flag == 1:
+        song = song.replace(" ", "%20")
+        wb.open(f'spotify:search:{song}')
+        sleep(5)
+        flag = 1
+        for i in range(27):
+            pyautogui.press("tab")
+            
+        for i in range(1):
+            pyautogui.press("enter")
+            sleep(1)"""         
 
-    if len(author) > 0:
+    """if len(author) > 0:
         # authenticate
         sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(client_id, secret_id))
         result = sp.search(author)
-
+        
         for i in range(0, len(result["tracks"]["items"])):
             # songs by artist
             name_song = result["tracks"]["items"][i]["name"].upper()
-
+            
             if song in name_song:
                 flag = 1
                 wb.open(result["tracks"]["items"][i]["uri"])
                 sleep(5)
                 pyautogui.press("enter")
-                break
+                break"""
 
-    # if song by artist not found
-    if flag == 0:
-        song = song.replace(" ", "%20")
-        wb.open(f'spotify:search:{song}')
+    # Searching song
+    """if 'search' in command:
+        speak("Whats searching song?")
+        song = takeComand().lower()
+        track = song.upper()
+        if flag == 0:
+            songs = track.replace(" ", "%20")
+            wb.open(f'spotify:search:{songs}')
+            sleep(5)
+            for i in range(29):
+                pyautogui.press("tab")
+
+            for i in range(1):
+                pyautogui.press("enter")
+                sleep(1)"""
+    #playlists
+    """elif 'like' in command:
+        wb.open(f'spotify:')
         sleep(5)
-        for i in range(18):
-            pyautogui.press("tab")
-
-        for i in range(2):
-            pyautogui.press("enter")
-            sleep(1)
-
+        for i in range(1):
+            pyautogui.press('enter')
+        
+        for i in range(5):
+            pyautogui.press('tab')
+        
+        for i in range(1):
+            pyautogui.press('enter')"""
+    
 if __name__ == "__main__":
     wishme()
     while True:
@@ -207,16 +253,14 @@ if __name__ == "__main__":
         elif 'stack overflow' in query:
             wb.open("www.stackoverflow.com")
         
-        elif 'youtube' in query:
-            wb.open("www.youtube.com")
-            
         elif 'facebook' in query:
             wb.open("www.facebook.com")
             
-        #elif 'crunchyroll' in query:
-        #    wb.open
+        elif 'crunchyroll' in query:
+            wb.open('www.crunchyroll.com')
         
-        elif 'search in firefox' in query:
+        #Reviar para cambiar edge por chrome o firefox
+        elif 'search in web' in query:
             speak("What should i search? ")
             search = takeComand().lower()
             wb.open(search + '.com')
@@ -255,13 +299,13 @@ if __name__ == "__main__":
         #    os.system("gnome-terminal -e 'bash -c \"sudo apt-get update; exec bash\"'")
         #    #Cambiar gnome=terminal por zsh
         
-        #Esto es para actualizar una terminal    
+        #Esto es para actualizar una terminal en linux   
         elif 'upgrade' in query:
             zshpath = '/usr/bin/zsh'
             os.system("gnome-terminal -e 'bash -c \"sudo apt-get upgrade; exec bash\"'")
             #Cambiar gnome=terminal por zsh
         
-        #Esto es para abrir una terminal    
+        #Esto es para abrir una terminal en linux
         elif 'terminal' in query:
             zshpath = '/usr/bin/zsh'
             os.system("gnome-terminal -e 'bash -c \"exec bash\"'")
@@ -281,7 +325,8 @@ if __name__ == "__main__":
         #            break;
         #    cap.release()
         #    cv2.destroyAllWindows()
-         
+        
+        #Solo linux 
         elif 'alsamixer' in query:
             os.system('alsamixer')
            
@@ -295,13 +340,12 @@ if __name__ == "__main__":
         elif 'send message' in query:
             message()
             
-        elif 'song' in query:
+        elif 'youtube song' in query:
             song()
-        
-        #Aprender electronica y circuitos para crear sistema de automatizacion con jarvis
         
         elif 'offline' in query:
             speak("Good bye sir!")
             quit()
 
 takeComand()
+#Aprender electronica y circuitos para crear sistema de automatizacion con jarvis
