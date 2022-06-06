@@ -113,7 +113,7 @@ def message():
     speak("Tell me the phone of contact")
     contact = takeComand().lower()
     
-    wb.open('https://web.whatsapp.com/send?phone=+529671269131'    """Poner un +contact despues de las comillas luego""")
+    wb.open('https://web.whatsapp.com/send?phone=+529671147768'    """Poner un +contact despues de las comillas luego""")
     
     sleep(10)
     
